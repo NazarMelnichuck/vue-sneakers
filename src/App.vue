@@ -1,26 +1,55 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+	<Transition name="slide-fade">
+		<cart-menu v-show="isCart"></cart-menu>
+	</Transition>
+	<header-section></header-section>
+	<div class="page">
+		<div class="page__container container">
+			<router-view></router-view>
+		</div>
+	</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapState } from 'vuex'
+import CartMenu from './components/CartMenu.vue'
+import HeaderSection from './components/HeaderSection.vue'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+	name: 'App',
+	components: { CartMenu, HeaderSection },
+	data() {
+		return {}
+	},
+	methods: {
+		openCart() {
+			this.$store.commit('openCart', true)
+		},
+	},
+	computed: {
+		...mapState({
+			isCart: (state) => state.cart.isCart,
+		}),
+	},
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+.slide-fade-enter-active {
+	transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+	transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+	// transform: translateX(20px);
+	opacity: 0;
+}
+
+.page {
+	height: 100%;
 }
 </style>
