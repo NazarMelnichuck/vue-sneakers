@@ -12,6 +12,9 @@
 			</div>
 			<div class="header__manu header-menu">
 				<div class="header-menu__item header-menu__item_cart" @click="openCart">
+					<Transition name="bounce">
+						<div class="header-menu__item-label header-menu__item-label_cart" v-if="getCartElLenght">{{ getCartElLenght }}</div>
+					</Transition>
 					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
 						<path
 							d="M7.54548 18.1818C7.99735 18.1818 8.36366 17.8155 8.36366 17.3636C8.36366 16.9118 7.99735 16.5455 7.54548 16.5455C7.09361 16.5455 6.72729 16.9118 6.72729 17.3636C6.72729 17.8155 7.09361 18.1818 7.54548 18.1818Z"
@@ -32,9 +35,12 @@
 							stroke-linecap="round"
 							stroke-linejoin="round" />
 					</svg>
-					<span>{{ totalPrice }} грн</span>
+					<span>Корзина</span>
 				</div>
 				<router-link class="header-menu__item header-menu__item_favorites" to="/favorites">
+					<Transition name="bounce">
+						<div class="header-menu__item-label header-menu__item-label_favorites" v-if="getFavoritesElLenght">{{ getFavoritesElLenght }}</div>
+					</Transition>
 					<svg xmlns="http://www.w3.org/2000/svg" width="19" height="17" viewBox="0 0 19 17" fill="none">
 						<g clip-path="url(#clip0_60_590)">
 							<path
@@ -65,9 +71,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
+	data() {
+		return {
+			selected: null,
+		}
+	},
 	methods: {
 		openCart() {
 			this.$store.commit('openCart', true)
@@ -78,6 +89,7 @@ export default {
 			totalPrice: (state) => state.cart.totalPrice,
 			isCart: (state) => state.cart.isCart,
 		}),
+		...mapGetters(['getCartElLenght', 'getFavoritesElLenght']),
 	},
 }
 </script>
@@ -172,6 +184,7 @@ export default {
 		flex-direction: row;
 		align-items: center;
 		text-decoration: none;
+		position: relative;
 		// .header-menu__item_cart
 		&_cart {
 			&:hover {
@@ -280,6 +293,60 @@ export default {
 				display: none;
 			}
 		}
+	}
+
+	// .header-menu__item-label
+	&__item-label {
+		position: absolute;
+		bottom: 12px;
+		left: 10px;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		font-size: 12px;
+		text-align: center;
+		line-height: 160%;
+
+		// .header-menu__item-label_cart
+		&_cart {
+			background: #9dd458;
+		}
+
+		// .header-menu__item-label_favorites
+		&_favorites {
+			background: #fd5050;
+			color: white;
+		}
+	}
+}
+
+.bounce-enter-active {
+	animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+	animation: bounce-out 0.5s;
+}
+@keyframes bounce-in {
+	0% {
+		transform: scale(0);
+	}
+	50% {
+		transform: scale(1.25);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes bounce-out {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(0);
 	}
 }
 </style>

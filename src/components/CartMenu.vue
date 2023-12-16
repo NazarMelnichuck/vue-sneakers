@@ -31,7 +31,9 @@
 				</div>
 				<div class="cart__orders orders" v-else-if="cartItems.length">
 					<div class="orders__items">
-						<cart-item v-for="cartItem of cartItems" :key="cartItem.id" :product="cartItem"></cart-item>
+						<TransitionGroup>
+							<cart-item v-for="cartItem of cartItems" :key="cartItem.id" :product="cartItem"></cart-item>
+						</TransitionGroup>
 					</div>
 					<div class="orders__info order-info">
 						<div class="order-info__items">
@@ -108,6 +110,16 @@ export default {
 </script>
 
 <style lang="scss">
+.list-enter-active,
+.list-leave-active {
+	transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
+}
+
 .background {
 	position: fixed;
 	top: 0;

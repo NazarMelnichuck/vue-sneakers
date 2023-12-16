@@ -90,7 +90,7 @@ export const productsModule = {
 				inCart: false,
 			},
 			{
-				id: 11,
+				id: 12,
 				title: 'Чоловічі кросівки Nike Kyrie Flytrap IV',
 				img: 'nike_kyrie_flytrap_4.jpg',
 				price: 5000,
@@ -188,7 +188,7 @@ export const productsModule = {
 				inCart: false,
 			},
 			{
-				id: 11,
+				id: 12,
 				title: 'Чоловічі кросівки Nike Kyrie Flytrap IV',
 				img: 'nike_kyrie_flytrap_4.jpg',
 				price: 5000,
@@ -196,8 +196,13 @@ export const productsModule = {
 				inCart: false,
 			},
 		],
+		filterItems: [
+			{ text: 'Популярні', value: 'popular' },
+			{ text: 'Від дешевих до дорогих', value: 'toRich' },
+			{ text: 'Від дорогих до дешевих', value: 'toCheap' },
+		],
+		productPage: {},
 	}),
-	getters: {},
 
 	mutations: {
 		setSneakers(state, newSneaker) {
@@ -215,11 +220,33 @@ export const productsModule = {
 		deleteFromCart(state, product) {
 			product.inCart = false
 		},
+		getProduct(state, id) {
+			state.productPage = state.sneakers.find((product) => product.id === id)
+		},
 		searchProduct(state, searchValue) {
 			if (searchValue.length === 0) {
 				state.sneakers = [...state.DB]
 			} else {
-				state.sneakers = state.DB.filter((el) => el.title.toLowerCase().includes(searchValue))
+				state.sneakers = state.DB.filter((el) => el.title.toLowerCase().includes(searchValue.toLowerCase()))
+			}
+		},
+		filterProducts(state, filterType) {
+			switch (filterType) {
+				case 'popular':
+					state.sneakers = [...state.DB]
+					break
+				case 'toCheap':
+					state.sneakers.sort(function (a, b) {
+						return b.price - a.price
+					})
+					break
+				case 'toRich':
+					state.sneakers.sort(function (a, b) {
+						return a.price - b.price
+					})
+					break
+				default:
+					break
 			}
 		},
 		deleteCartAfterOrder(state, cartItems) {

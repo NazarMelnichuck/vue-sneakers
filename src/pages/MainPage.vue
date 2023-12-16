@@ -2,6 +2,7 @@
 	<section class="products">
 		<div class="products__header header-page">
 			<section-title>Всі кросівки</section-title>
+			<select-item v-model:selected="selected" :filterItems="filterItems"></select-item>
 			<div class="input">
 				<svg class="input__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
 					<path
@@ -13,15 +14,25 @@
 				<input class="input__item" type="text" v-model="searchValue" @keyup.enter="handleSearch" placeholder="Пошук..." />
 			</div>
 		</div>
-		<div class="products__store">
-			<product-card v-for="sneaker in sneakers" :key="sneaker.id" :product="sneaker"></product-card>
+		<div class="products-message" v-if="sneakers.length < 1">
+			<error-message>
+				<template v-slot:emoji><img src="/img/clearCart.png" /></template>
+				<template v-slot:title>Тавару не знайдено</template>
+			</error-message>
+		</div>
+		<div class="products__store" v-else>
+			<TransitionGroup>
+				<product-card v-for="sneaker in sneakers" :key="sneaker.id" :product="sneaker"></product-card>
+			</TransitionGroup>
 		</div>
 	</section>
 </template>
 
 <script>
+import SelectItem from '@/components/UI/SelectItem.vue'
 import ProductCard from '@/components/UI/ProductCard.vue'
 import SectionTitle from '@/components/UI/SectionTitle.vue'
+import ErrorMessage from '@/components/ErrorMessage.vue'
 
 import { mapState } from 'vuex'
 
@@ -30,10 +41,13 @@ export default {
 	components: {
 		SectionTitle,
 		ProductCard,
+		SelectItem,
+		ErrorMessage,
 	},
 	data() {
 		return {
 			searchValue: null,
+			selected: null,
 		}
 	},
 	methods: {
@@ -44,12 +58,40 @@ export default {
 	computed: {
 		...mapState({
 			sneakers: (state) => state.products.sneakers,
+			filterItems: (state) => state.products.filterItems,
 		}),
+	},
+	watch: {
+		selected() {
+			this.$store.commit('filterProducts', this.selected)
+		},
 	},
 }
 </script>
 
 <style lang="scss">
+.list-move, /* застосувати перехід до рухомих елементів */
+.list-enter-active,
+.list-leave-active {
+	transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
+}
+
+.list-leave-active {
+	position: absolute;
+}
+
+.products-message {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .products {
 	padding: 40px 0;
 
@@ -89,7 +131,8 @@ export default {
 	&__item {
 		border-radius: 10px;
 		border: 1px solid #f3f3f3;
-		width: 250px;
+		max-width: 250px;
+		width: 100%;
 		padding: 14px 0 14px 45px;
 		color: black;
 		font-family: Inter;

@@ -17,7 +17,11 @@ export const cartModule = {
 		orderComplite: false,
 	}),
 
-	getters: {},
+	getters: {
+		getCartElLenght: (state) => {
+			return state.cartItems.length
+		},
+	},
 
 	mutations: {
 		openCart(state) {

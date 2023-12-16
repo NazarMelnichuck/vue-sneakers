@@ -2,7 +2,11 @@ export const favoritesModule = {
 	state: () => ({
 		favoritesItems: [],
 	}),
-	getters: {},
+	getters: {
+		getFavoritesElLenght: (state) => {
+			return state.favoritesItems.length
+		},
+	},
 
 	mutations: {
 		addToFavorites(state, product) {
