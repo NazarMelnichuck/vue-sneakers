@@ -1,15 +1,14 @@
 <template>
 	<header class="header">
 		<div class="header__container container">
-			<div class="header__logo logo">
-				<router-link to="/">
-					<img class="logo__img" src="/img/logo.png" alt="logo" />
-				</router-link>
+			<router-link to="/" class="header__logo logo">
+				<img class="logo__img" src="/img/logo.png" alt="logo" />
 				<div class="logo__text">
 					<h1>Vue sneakers</h1>
 					<p>Магазин найкращих кросівок</p>
 				</div>
-			</div>
+			</router-link>
+
 			<div class="header__manu header-menu">
 				<div class="header-menu__item header-menu__item_cart" @click="openCart">
 					<Transition name="bounce">
@@ -111,7 +110,7 @@ export default {
 	}
 
 	@media (max-width: 800px) {
-		padding: 20px 0;
+		padding: 10px 0;
 	}
 	// .header__container
 	&__container {
@@ -119,12 +118,14 @@ export default {
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
+		gap: 10px;
 	}
 	// .header__logo
 	&__logo {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		text-decoration: none;
 	}
 	// .header__manu
 	&__manu {
@@ -150,6 +151,9 @@ export default {
 	}
 	// .logo__text
 	&__text {
+		@media (max-width: 480px) {
+			display: none;
+		}
 		h1 {
 			color: #000;
 			font-family: Inter;

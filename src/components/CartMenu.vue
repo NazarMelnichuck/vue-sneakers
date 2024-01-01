@@ -96,6 +96,7 @@ export default {
 		order() {
 			this.$store.commit('deleteCartAfterOrder', this.cartItems)
 			this.$store.commit('order', this.cartItems)
+			this.$store.commit('minusCount')
 		},
 	},
 	computed: {

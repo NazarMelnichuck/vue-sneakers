@@ -31,7 +31,8 @@ export default {
 			return `/img/sneakers/${imgName}`
 		},
 		deleteFromCart() {
-			store.commit('deleteFromCart', this.product)
+			store.commit('deleteFromCartList', this.product)
+			this.$store.commit('deleteCart', this.product.id)
 		},
 	},
 	computed: {},

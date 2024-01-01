@@ -82,9 +82,13 @@ export default {
 		},
 		setCart() {
 			if (!this.product.inCart) {
-				store.commit('addToCart', this.product)
+				store.commit('addToCartList', this.product)
+				this.$store.commit('addCart', this.product.id)
+
+				// console.log(this.product)
 			} else {
-				store.commit('deleteFromCart', this.product)
+				store.commit('deleteFromCartList', this.product)
+				this.$store.commit('deleteCart', this.product.id)
 			}
 		},
 	},
@@ -114,11 +118,13 @@ export default {
 	position: relative;
 	transition: 0.2s;
 
-	&:hover {
-		border: 1px solid #f8f8f8;
-		box-shadow: 0px 14px 30px 0px rgba(0, 0, 0, 0.05);
-		transform: translateY(-10px);
-		transition: 0.2s;
+	@media (min-width: 600px) {
+		&:hover {
+			border: 1px solid #f8f8f8;
+			box-shadow: 0px 14px 30px 0px rgba(0, 0, 0, 0.05);
+			transform: translateY(-10px);
+			transition: 0.2s;
+		}
 	}
 	// .card__like
 	&__like {

@@ -32,14 +32,14 @@ export const cartModule = {
 			state.isCart = false
 			body.style = 'overflow: auto'
 		},
-		addToCart(state, product) {
+		addToCartList(state, product) {
 			state.cartItems.unshift(product)
 			state.totalPrice = state.totalPrice + product.price
 
 			state.cartInfo[0].value = state.totalPrice
 			state.cartInfo[1].value = (state.totalPrice / 100) * 5
 		},
-		deleteFromCart(state, product) {
+		deleteFromCartList(state, product) {
 			state.cartItems = state.cartItems.filter((item) => item.id !== product.id)
 			state.totalPrice = state.totalPrice - product.price
 
