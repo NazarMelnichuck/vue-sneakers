@@ -32,8 +32,11 @@ export const cartModule = {
 			state.isCart = false
 			body.style = 'overflow: auto'
 		},
-		addToCartList(state, product) {
-			state.cartItems.unshift(product)
+		addToCartList(state, { product, sizeId, sizeValue }) {
+			const newOreder = { ...product }
+			newOreder.orderedSizeId = sizeId
+			newOreder.sizeValue = sizeValue
+			state.cartItems.unshift(newOreder)
 			state.totalPrice = state.totalPrice + product.price
 
 			state.cartInfo[0].value = state.totalPrice
@@ -47,6 +50,9 @@ export const cartModule = {
 			state.cartInfo[1].value = (state.totalPrice / 100) * 5
 		},
 		order(state) {
+			state.cartItems.forEach((el) => {
+				this.commit('minusCountProductSize', { id: el.id, sizeId: el.orderedSizeId })
+			})
 			state.orderComplite = true
 			state.totalPrice = 0
 			state.cartItems = []

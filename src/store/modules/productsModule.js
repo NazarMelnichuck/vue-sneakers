@@ -10,7 +10,7 @@ export const productsModule = {
 				inCart: false,
 				size: [
 					{ sizeId: 1, count: 15 },
-					{ sizeId: 2, count: 42 },
+					{ sizeId: 2, count: 0 },
 					{ sizeId: 3, count: 7 },
 					{ sizeId: 4, count: 34 },
 					{ sizeId: 5, count: 2 },
@@ -252,7 +252,7 @@ export const productsModule = {
 				inCart: false,
 				size: [
 					{ sizeId: 1, count: 15 },
-					{ sizeId: 2, count: 42 },
+					{ sizeId: 2, count: 0 },
 					{ sizeId: 3, count: 7 },
 					{ sizeId: 4, count: 34 },
 					{ sizeId: 5, count: 2 },
@@ -711,6 +711,24 @@ export const productsModule = {
 		getProductSize: (state) => (sizeCountry) => {
 			return Object.values(state.productPage.size[sizeCountry])
 		},
+		getProductCount: (state) => (productId, sizeId) => {
+			const product = state.sneakers.find((product) => product.id === productId)
+
+			if (product) {
+				const size = product.size.find((size) => size.sizeId === sizeId)
+
+				if (size) {
+					return size.count
+				}
+			}
+		},
+		getProductCartStatus: (state) => (productId) => {
+			const product = state.sneakers.find((product) => product.id === productId)
+
+			if (product) {
+				return product.inCart
+			}
+		},
 	},
 
 	mutations: {
@@ -734,6 +752,17 @@ export const productsModule = {
 			state.sneakers.find((el) => {
 				if (el.id === productId) {
 					el.inCart = false
+				}
+			})
+		},
+		minusCountProductSize(state, { id, sizeId }) {
+			state.sneakers.forEach((product) => {
+				if (product.id === id) {
+					product.size.forEach((size) => {
+						if (size.sizeId === sizeId) {
+							size.count -= 1
+						}
+					})
 				}
 			})
 		},

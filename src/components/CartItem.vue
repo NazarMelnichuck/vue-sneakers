@@ -4,6 +4,7 @@
 		<div class="order__info info">
 			<h4 class="info__title">{{ product.title }}</h4>
 			<strong class="info__price">{{ product.price }} грн.</strong>
+			<p>{{ product.sizeValue }}</p>
 		</div>
 		<button class="order__button" @click="deleteFromCart">
 			<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">

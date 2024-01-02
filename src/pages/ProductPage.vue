@@ -23,7 +23,7 @@
 						</ul>
 						<ul class="sizes__list">
 							<li class="sizes__item" v-for="size in sizes" :key="size">
-								<button class="sizes__prd-button" :class="{ 'sizes__prd-button_active': size.sizeId === currentSizeId }" @click="setSize(size.sizeId)">
+								<button class="sizes__prd-button" :class="{ 'sizes__prd-button_active': size.sizeId === currentSizeId }" @click="setSize(size.sizeId, size.value)" :disabled="size.count === 0">
 									{{ size.value }}
 								</button>
 							</li>
@@ -31,10 +31,10 @@
 					</div>
 					<div class="product-info__buttons product-buttons">
 						<div class="product-buttons__items">
-							<button-ui @click="setCart" v-if="!product.inCart">До кошику</button-ui>
-							<button-ui @click="setCart" v-else>Забрати з кошику</button-ui>
+							<button-ui @click="setCart">До кошику</button-ui>
+							<!-- <button-ui @click="setCart" v-else>Забрати з кошику</button-ui> -->
 						</div>
-						<p class="product-buttons__count"><strong> В наявності:</strong> {{ productSizeCount }}</p>
+						<p class="product-buttons__count"><strong> В наявності:</strong> {{ getProductCount(product.id, currentSizeId) }}</p>
 					</div>
 				</div>
 			</div>
@@ -57,6 +57,7 @@ export default {
 			inFavorite: null,
 			currentCountry: null,
 			currentSizeId: 1,
+			currentSizeValue: null,
 			productSizeCount: null,
 			sizes: [],
 		}
@@ -68,28 +69,28 @@ export default {
 		setSizeCountry(sizeCountry) {
 			this.sizes = this.product.size[sizeCountry]
 			this.currentCountry = sizeCountry
-			// console.log(sizeCountry)
-			// console.log(this.getProductSize(sizeCountry))
 		},
-		setSize(sizeId) {
+		setSize(sizeId, sizeValue) {
 			this.currentSizeId = sizeId
+			this.currentSizeValue = sizeValue
 		},
 		setCart() {
-			if (!this.product.inCart) {
-				this.$store.commit('addToCartList', this.product)
-				this.$store.commit('addCart', this.product.id)
-				// console.log(this.product)
-			} else {
-				this.$store.commit('deleteFromCartList', this.product)
-				this.$store.commit('deleteCart', this.product.id)
-			}
+			this.$store.commit('addToCartList', { product: this.product, sizeId: this.currentSizeId, sizeValue: this.currentSizeValue })
+			this.$store.commit('addCart', this.product.id)
+			// if (!this.getProductCartStatus(this.product.id)) {
+			// 	this.$store.commit('addToCartList', { product: this.product, sizeId: this.currentSizeId })
+			// 	this.$store.commit('addCart', this.product.id)
+			// } else {
+			// 	this.$store.commit('deleteFromCartList', this.product)
+			// 	this.$store.commit('deleteCart', this.product.id)
+			// }
 		},
 	},
 	computed: {
 		...mapState({
 			product: (state) => state.products.productPage,
 		}),
-		...mapGetters(['getCountrySize', 'getProductSize', 'getProductSizeCount']),
+		...mapGetters(['getCountrySize', 'getProductSize', 'getProductCount', 'getProductCartStatus']),
 	},
 	watch: {
 		inFavorite() {
@@ -113,10 +114,9 @@ export default {
 		this.sizes = this.product.size['ua']
 
 		const country = Object.keys(this.product.size)
-		const defaultSizeCountry = this.product.size[country[0]]
 
 		this.currentCountry = country[0]
-		this.productSizeCount = defaultSizeCountry[0].count
+		this.currentSizeValue = this.sizes[0].value
 	},
 }
 </script>

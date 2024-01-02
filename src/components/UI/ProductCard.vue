@@ -28,7 +28,7 @@
 					<span>Ціна:</span>
 					<strong>{{ product.price }} грн.</strong>
 				</div>
-				<button class="price__cart" @click="setCart" v-show="product.inCart === false"></button>
+				<!-- <button class="price__cart" @click="setCart" v-show="product.inCart === false"></button>
 				<button class="price__cart-added" @click="setCart" v-show="product.inCart === true">
 					<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
 						<g clip-path="url(#clip0_60_202)">
@@ -52,7 +52,7 @@
 							</clipPath>
 						</defs>
 					</svg>
-				</button>
+				</button> -->
 			</div>
 		</div>
 	</Transition>
@@ -81,15 +81,17 @@ export default {
 			}
 		},
 		setCart() {
-			if (!this.product.inCart) {
-				store.commit('addToCartList', this.product)
-				this.$store.commit('addCart', this.product.id)
+			this.$store.commit('addToCartList', { product: this.product, sizeId: this.currentSizeId })
+			this.$store.commit('addCart', this.product.id)
+			// if (!this.product.inCart) {
+			// 	this.$store.commit('addToCartList', { product: this.product, sizeId: this.currentSizeId })
+			// 	this.$store.commit('addCart', this.product.id)
 
-				// console.log(this.product)
-			} else {
-				store.commit('deleteFromCartList', this.product)
-				this.$store.commit('deleteCart', this.product.id)
-			}
+			// 	// console.log(this.product)
+			// } else {
+			// 	store.commit('deleteFromCartList', this.product)
+			// 	this.$store.commit('deleteCart', this.product.id)
+			// }
 		},
 	},
 	computed: {},
