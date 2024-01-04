@@ -735,11 +735,28 @@ export const productsModule = {
 		setSneakers(state, newSneaker) {
 			state.sneakers = newSneaker
 		},
-		addToFavorites(state, product) {
-			product.inFavorite = true
-		},
-		deleteFromFavorites(state, product) {
-			product.inFavorite = false
+		// addToFavorites(state, product) {
+		// 	product.inFavorite = true
+		// },
+		// deleteFromFavorites(state, product) {
+		// 	product.inFavorite = false
+		// },
+		setFavoritesStatus(state, { id, inFavorite, inProductPage = false }) {
+			state.sneakers.find((el) => {
+				if (el.id === id) {
+					el.inFavorite = inFavorite
+
+					if (inProductPage) {
+						this.commit('getProduct', id)
+					}
+
+					if (inFavorite) {
+						this.commit('addToFavorites', el)
+					} else {
+						this.commit('deleteFromFavorites', el)
+					}
+				}
+			})
 		},
 		addCart(state, productId) {
 			state.sneakers.find((el) => {
@@ -790,7 +807,9 @@ export const productsModule = {
 			if (searchValue.length === 0) {
 				state.sneakers = [...state.DB]
 			} else {
-				state.sneakers = state.DB.filter((el) => el.title.toLowerCase().includes(searchValue.toLowerCase()))
+				state.sneakers = state.DB.filter((el) =>
+					el.title.toLowerCase().includes(searchValue.toLowerCase())
+				)
 			}
 		},
 		filterProducts(state, filterType) {

@@ -4,7 +4,11 @@
 			<div class="product__content product-content">
 				<div class="product-content__img">
 					<img :src="getImagePath(product.img)" :alt="`${product.title} Image`" />
-					<favorite-button v-model:addToFavorite="inFavorite" :inFavorite="product.inFavorite"></favorite-button>
+
+					<favorite-button
+						v-model:addToFavorite="inFavorite"
+						:inFavorite="product.inFavorite"
+					></favorite-button>
 				</div>
 				<div class="product-content__info product-info">
 					<h1 class="product-info__title">{{ product.title }}</h1>
@@ -15,15 +19,32 @@
 					<div class="product-info__sizes sizes">
 						<h3 class="sizes__title">Виберіть розмір:</h3>
 						<ul class="sizes__list list-country">
-							<li class="sizes__item" v-for="sizeCountry in getCountrySize" :key="sizeCountry">
-								<button class="sizes__ctr-button" :class="{ 'sizes__ctr-button_active': sizeCountry === currentCountry }" @click="setSizeCountry(sizeCountry)">
+							<li
+								class="sizes__item"
+								v-for="sizeCountry in getCountrySize"
+								:key="sizeCountry"
+							>
+								<button
+									class="sizes__ctr-button"
+									:class="{
+										'sizes__ctr-button_active': sizeCountry === currentCountry,
+									}"
+									@click="setSizeCountry(sizeCountry)"
+								>
 									{{ sizeCountry.toUpperCase() }}
 								</button>
 							</li>
 						</ul>
 						<ul class="sizes__list">
 							<li class="sizes__item" v-for="size in sizes" :key="size">
-								<button class="sizes__prd-button" :class="{ 'sizes__prd-button_active': size.sizeId === currentSizeId }" @click="setSize(size.sizeId, size.value)" :disabled="size.count === 0">
+								<button
+									class="sizes__prd-button"
+									:class="{
+										'sizes__prd-button_active': size.sizeId === currentSizeId,
+									}"
+									@click="setSize(size.sizeId, size.value)"
+									:disabled="size.count === 0"
+								>
 									{{ size.value }}
 								</button>
 							</li>
@@ -34,7 +55,10 @@
 							<button-ui @click="setCart">До кошику</button-ui>
 							<!-- <button-ui @click="setCart" v-else>Забрати з кошику</button-ui> -->
 						</div>
-						<p class="product-buttons__count"><strong> В наявності:</strong> {{ getProductCount(product.id, currentSizeId) }}</p>
+						<p class="product-buttons__count">
+							<strong> В наявності:</strong>
+							{{ getProductCount(product.id, currentSizeId) }}
+						</p>
 					</div>
 				</div>
 			</div>
@@ -75,7 +99,11 @@ export default {
 			this.currentSizeValue = sizeValue
 		},
 		setCart() {
-			this.$store.commit('addToCartList', { product: this.product, sizeId: this.currentSizeId, sizeValue: this.currentSizeValue })
+			this.$store.commit('addToCartList', {
+				product: this.product,
+				sizeId: this.currentSizeId,
+				sizeValue: this.currentSizeValue,
+			})
 			this.$store.commit('addCart', this.product.id)
 			// if (!this.getProductCartStatus(this.product.id)) {
 			// 	this.$store.commit('addToCartList', { product: this.product, sizeId: this.currentSizeId })
@@ -90,15 +118,26 @@ export default {
 		...mapState({
 			product: (state) => state.products.productPage,
 		}),
-		...mapGetters(['getCountrySize', 'getProductSize', 'getProductCount', 'getProductCartStatus']),
+		...mapGetters([
+			'getCountrySize',
+			'getProductSize',
+			'getProductCount',
+			'getProductCartStatus',
+		]),
 	},
 	watch: {
 		inFavorite() {
-			if (!this.product.inFavorite) {
-				this.$store.commit('addToFavorites', this.product)
-			} else {
-				this.$store.commit('deleteFromFavorites', this.product)
-			}
+			this.$store.commit('setFavoritesStatus', {
+				id: this.product.id,
+				inFavorite: this.inFavorite,
+				inProductPage: true,
+			})
+
+			// if (!this.product.inFavorite) {
+			// 	this.$store.commit('addToFavorites', this.product)
+			// } else {
+			// 	this.$store.commit('deleteFromFavorites', this.product)
+			// }
 		},
 		currentSizeId() {
 			this.sizes.forEach((el) => {

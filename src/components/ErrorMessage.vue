@@ -19,7 +19,7 @@ export default {}
 	justify-content: center;
 	align-items: center;
 	width: 245px;
-	height: calc(100vh - 171px - 170px);
+	height: calc(100vh - 251px - 170px);
 	margin: 0 auto;
 	gap: 20px;
 
